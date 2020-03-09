@@ -22,7 +22,7 @@ void WeatherReceiverClass::begin()
 
 void WeatherReceiverClass::printFields()
 {
-	Serial.println("# WEATHER,temperatureC,moisture,windSpeedMs,rainFallMmMinute,rainFallMmHour,rainFallMmDay");
+	Serial.println("# WEATHER,temperatureC,moisture,windSpeedMs,rainFallMmMinute,rainFallMmHour,rainFallMmDay,co2Ppm");
 }
 
 void WeatherReceiverClass::update()
@@ -44,10 +44,10 @@ void WeatherReceiverClass::update()
         if (!inPacket) {
             // do the magic...
             magicBuf[magicPtr++] = (uint8_t)c;
-            if (!checkMagic()) { 
+            if (!checkMagic()) {
                 DBLN(F("bad magic"));
-                resetData(); 
-                break; 
+                resetData();
+                break;
             }
             if (magicPtr == 2) {
                 inPacket = true;
@@ -86,7 +86,9 @@ void WeatherReceiverClass::checkWeatherPacket()
         Serial.print(packet.data.rainFallMmHour);
         Serial.print(',');
         Serial.print(packet.data.rainFallMmDay);
-		Serial.println();
+        Serial.print(",");
+        Serial.print(packet.data.co2Ppm);
+        Serial.println();
     }
 }
 
@@ -107,4 +109,3 @@ bool WeatherReceiverClass::checkMagic()
     }
     return true;
 }
-
